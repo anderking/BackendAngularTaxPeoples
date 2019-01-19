@@ -35,8 +35,6 @@ var controller =
 					var like = new Like();
 					var params = req.body;
 
-					console.log(params);
-
 					like.userID = params.userID;
 					like.projectID = params.projectID;
 
@@ -115,7 +113,7 @@ var controller =
 			{
 				if (err) return res.status(500).send({ message: err });
 				
-				if(like.length<=0) return res.status(404).send(false);
+				if(like.length<=0) return res.status(202).send(false);
 
 				return res.status(200).send(true);
 			}

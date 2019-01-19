@@ -10,7 +10,6 @@ var controller = {
 	saveProject: function(req, res){
 		var project = new Project();
 		var params = req.body;
-		console.log(params);
 		project.name = params.name;
 		project.description = params.description;
 		project.category = params.category;
@@ -79,11 +78,6 @@ var controller = {
 			if(err) return res.status(500).send({message: 'Error al devolver los datos.'});
 
 			if(!projects) return res.status(404).send({message: 'No hay projectos que mostrar.'});
-			
-			for (var i=0; i<projects.length;i++){
-				console.log(projects.name);
-
-			}
 
 			return res.status(200).send({projects});
 

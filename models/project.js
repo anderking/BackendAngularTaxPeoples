@@ -17,4 +17,3 @@ var ProjectSchema = Schema({
 });
 
 module.exports = mongoose.model('Project', ProjectSchema);
-// projects  --> guarda los documents en la coleccion

@@ -7,15 +7,12 @@ const crypto = require('crypto');
 
 const UserSchema = new Schema({
   email: { type: String, unique: true, lowercase: true },
-  password: { type: String, /*select: false */},
-  name: String,
-  job: String,
-  web: String,
+  password: { type: String },
   description: String,
   image: String,
-  signupDate: { type: Date, default: Date.now() },
-  lastLogin: Date,
   tipo:String,
+  signupDate: { type: Date, default: Date.now() },
+
 }, {
     versionKey: false
 });

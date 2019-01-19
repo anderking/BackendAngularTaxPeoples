@@ -82,7 +82,6 @@ var controller = {
 				}else
 				{
 					if(req.body.password!=user[0].password){
-						console.log( req.body.password,user[0].password )
 						return res.status(404).send({ message: 'La contraseña no coincide' });
 					}else
 					{
