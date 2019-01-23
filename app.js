@@ -28,6 +28,7 @@ app.use((req, res, next) => {
 var auth_routes = require('./routes/auth');
 var user_routes = require('./routes/user');
 var persona_routes = require('./routes/persona');
+var empresa_routes = require('./routes/empresa');
 var project_routes = require('./routes/project');
 var like_routes = require('./routes/like');
 
@@ -35,6 +36,7 @@ var like_routes = require('./routes/like');
 app.use('/api', auth_routes);
 app.use('/api', user_routes);
 app.use('/api', persona_routes);
+app.use('/api', empresa_routes);
 app.use('/api', project_routes);
 app.use('/api', like_routes);
 

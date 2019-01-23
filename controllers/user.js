@@ -42,13 +42,13 @@ var controller = {
 		var update = req.body;
 
 		User.findByIdAndUpdate(userId, update, {new:true}, (err, userUpdated) => {
-			if(err) return res.status(500).send({message: 'Error al actualizar'});
-
+			if(err) return res.status(500).send({message: 'Este correo ya existe, utilice otro por favor!'});
+			
 			if(!userUpdated) return res.status(404).send({message: 'No existe el Usuario para actualizar'});
 
 			return res.status(200).send({
 				user: userUpdated,
-				message: "Usuario Actualizado"
+				message: "Datos Actualizados Correctamente"
 			});
 		});
 
@@ -64,7 +64,7 @@ var controller = {
 
 			return res.status(200).send({
 				user: userRemoved,
-				message: "Usuario Eliminado"
+				message: "Usuario Eliminado Correctamente"
 			});
 		});
 	},

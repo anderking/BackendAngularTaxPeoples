@@ -18,7 +18,7 @@ var controller =
 			{
 				if (err)
 				{
-					return res.status(500).send({ message: err });
+					return res.status(500).send({ message: "Error en el Servidor" });
 				}
 				if(req.body.userID==undefined){
 					return res.status(404).send({ message: 'No se encuentra el campo userID en la solicitud' });	
@@ -28,7 +28,7 @@ var controller =
 				}
 				if(like.length>0)
 				{
-					return res.status(404).send({ message: 'Ya le diste like a este proyecto' });
+					return res.status(404).send({ message: 'Ya le diste like a esta publicación' });
 				}
 				else
 				{
@@ -40,7 +40,7 @@ var controller =
 
 					like.save((err, likeStored) =>
 					{
-						if(err) return res.status(500).send({message: 'Error al guardar el documento.'});
+						if(err) return res.status(500).send({message: 'Error en Servidor.'});
 
 						if(!likeStored) return res.status(404).send({message: 'No se ha podido guardar el like.'});
 
@@ -67,7 +67,7 @@ var controller =
 
 			},(err, like) =>
 			{
-				if(err) return res.status(500).send({message: 'No se ha podido borrar el like'});
+				if(err) return res.status(500).send({message: 'Error en el Servidor'});
 
 				if(like.n==0) return res.status(404).send({message: "Ya fue eliminado."});
 

@@ -1,6 +1,7 @@
 'use strict'
 
 var Persona = require('../models/persona');
+var Empresa = require('../models/empresa');
 var moment = require('moment');
 
 var controller = {
@@ -41,32 +42,53 @@ var controller = {
 								return res.status(404).send({ message: 'Este Usuario ya tiene una Persona asociada' });
 							}else
 							{
-								var params = req.body;
+								Empresa.find
+								(
+									{
+										userID: req.body.userID	
+									},
+									(error,result) =>
+									{
+										if (error)
+										{
+											return res.status(500).send({ message: error });
+										}
 
-								const persona = new Persona({
-									name: params.name,
-									cedula: params.cedula,
-									telefono: params.telefono,
-									direccion: params.direccion,
-									estado: params.estado,
-									sexo: params.sexo,
-									edoCivil: params.edoCivil,
-									fechaNacimiento: params.fechaNacimiento,
-									userID: params.userID,
-								});
-								console.log(persona);
+										if (result.length>0)
+										{
+											return res.status(404).send({ message: 'Este Usuario ya tiene una Empresa asociada' });
+										}else
+										{
 
-								persona.save((err, personaStored) =>
-								{
-									if(err) return res.status(500).send({message: 'Error en el Servidor.'});
+											var params = req.body;
 
-									if(!personaStored) return res.status(404).send({message: 'No se ha podido guardar la Persona asociada al Usuario'});
-									
-									return res.status(200).send({
-										persona: personaStored,
-										message: "Persona asociada al Usuario creada satisfactoriamente"
-									});
-								});
+											const persona = new Persona({
+												name: params.name,
+												cedula: params.cedula,
+												telefono: params.telefono,
+												direccion: params.direccion,
+												estado: params.estado,
+												sexo: params.sexo,
+												edoCivil: params.edoCivil,
+												fechaNacimiento: params.fechaNacimiento,
+												userID: params.userID,
+											});
+											console.log(persona);
+
+											persona.save((err, personaStored) =>
+											{
+												if(err) return res.status(500).send({message: 'Error en el Servidor.'});
+
+												if(!personaStored) return res.status(404).send({message: 'No se ha podido guardar la Persona asociada al Usuario'});
+												
+												return res.status(200).send({
+													persona: personaStored,
+													message: "Persona asociada al Usuario creada satisfactoriamente"
+												});
+											});
+										}
+									}
+								);
 							}
 						}
 					);
