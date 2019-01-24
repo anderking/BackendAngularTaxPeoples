@@ -10,6 +10,4 @@ router.put('/likes/:id', LikeController.disLikes);
 router.get('/likes/:id', LikeController.getLikes);
 router.get('/islikes/:idU/:idP', LikeController.isLike);
 
-
-
 module.exports = router;

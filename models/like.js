@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 
 var LikeSchema = Schema({
 	userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-	projectID: { type: mongoose.Schema.Types.ObjectId, ref: "Project" },
+	publicationID: { type: mongoose.Schema.Types.ObjectId, ref: "Publication" },
 }, {
     versionKey: false
 });

@@ -2,7 +2,7 @@
 
 var Like = require('../models/like');
 var User = require('../models/user');
-var Project = require('../models/project');
+var Publication = require('../models/publication');
 
 var controller =
 {
@@ -12,7 +12,7 @@ var controller =
 		(
 			{
 			    userID : { $in: [req.body.userID] },
-			    projectID : { $in: [req.body.projectID] }
+			    publicationID : { $in: [req.body.publicationID] }
 			},
 			(err, like) =>
 			{
@@ -23,8 +23,8 @@ var controller =
 				if(req.body.userID==undefined){
 					return res.status(404).send({ message: 'No se encuentra el campo userID en la solicitud' });	
 				}
-				if(req.body.projectID==undefined){
-					return res.status(404).send({ message: 'No se encuentra el campo projectID en la solicitud' });	
+				if(req.body.publicationID==undefined){
+					return res.status(404).send({ message: 'No se encuentra el campo publicationID en la solicitud' });	
 				}
 				if(like.length>0)
 				{
@@ -36,7 +36,7 @@ var controller =
 					var params = req.body;
 
 					like.userID = params.userID;
-					like.projectID = params.projectID;
+					like.publicationID = params.publicationID;
 
 					like.save((err, likeStored) =>
 					{
@@ -57,13 +57,13 @@ var controller =
 	disLikes: function(req, res)
 	{
 		var userID = req.body.userID;
-		var projectID = req.body.projectID;
+		var publicationID = req.body.publicationID;
 
 		Like.remove
 		(
 			{
 				userID : { $in: [req.body.userID] },
-			    projectID : { $in: [req.body.projectID] }
+			    publicationID : { $in: [req.body.publicationID] }
 
 			},(err, like) =>
 			{
@@ -85,7 +85,7 @@ var controller =
 		Like.find
 		(
 			{
-			    projectID : req.params.id
+			    publicationID : req.params.id
 			},
 			(err, likes) =>
 			{
@@ -107,7 +107,7 @@ var controller =
 		(
 			{
 			    userID : { $in: [req.params.idU] },
-			    projectID : { $in: [req.params.idP] }
+			    publicationID : { $in: [req.params.idP] }
 			},
 			(err, like) =>
 			{

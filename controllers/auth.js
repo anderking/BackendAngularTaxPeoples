@@ -37,6 +37,7 @@ var controller = {
 						email: req.body.email,
 						password: req.body.password,
 						tipo: req.body.tipo,
+						description: req.body.description,
 					});
 
 					user.save( (err) =>
