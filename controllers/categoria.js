@@ -26,9 +26,8 @@ var controller = {
 					var categoria = new Categoria();
 					var params = req.body;
 
-					categoria.name = params.name;
+					categoria.name = params.name.charAt(0).toUpperCase()+params.name.slice(1);
 					categoria.description = params.description;
-
 					categoria.save((err, categoriaStored) => {
 						if(err) return res.status(500).send({message: 'Error en el Servidor.'});
 
@@ -85,6 +84,7 @@ var controller = {
 	{
 		var categoriaId = req.params.id;
 		var update = req.body;
+		update.name = update.name.charAt(0).toUpperCase()+update.name.slice(1);
 
 		Categoria.findByIdAndUpdate(categoriaId, update, {new:true}, (err, categoriaUpdated) => {
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});

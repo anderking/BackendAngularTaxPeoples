@@ -4,7 +4,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var RutaSchema = Schema({
-	name: { type: String, unique: true, lowercase: true},
+	name: { type: String, unique: true},
 	description: String,
 }, {
     versionKey: false

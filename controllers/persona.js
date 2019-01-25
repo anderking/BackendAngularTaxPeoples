@@ -67,7 +67,7 @@ var controller = {
 												cedula: params.cedula,
 												telefono: params.telefono,
 												direccion: params.direccion,
-												estado: params.estado,
+												estado: params.estado.charAt(0).toUpperCase()+params.estado.slice(1),
 												sexo: params.sexo,
 												edoCivil: params.edoCivil,
 												fechaNacimiento: params.fechaNacimiento,

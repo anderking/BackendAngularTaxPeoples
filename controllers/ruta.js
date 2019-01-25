@@ -28,7 +28,7 @@ var controller = {
 					var ruta = new Ruta();
 					var params = req.body;
 
-					ruta.name = params.name;
+					ruta.name = params.name.charAt(0).toUpperCase()+params.name.slice(1),
 					ruta.description = params.description;
 
 					ruta.save((err, rutaStored) => {
@@ -85,6 +85,7 @@ var controller = {
 	updateRuta: function(req, res){
 		var rutaId = req.params.id;
 		var update = req.body;
+		update.name = update.name.charAt(0).toUpperCase()+update.name.slice(1);
 
 		Ruta.findByIdAndUpdate(rutaId, update, {new:true}, (err, rutaUpdated) => {
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});

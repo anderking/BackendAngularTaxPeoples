@@ -67,7 +67,7 @@ var controller = {
 											publication.title = params.title;
 											publication.description = params.description;
 											publication.image = null;
-											publication.tarfia = params.tarfia;
+											publication.tarifa = params.tarifa;
 											publication.vistas = null;
 											publication.userID = params.userID;
 											publication.categoriaID = params.categoriaID;
@@ -111,7 +111,10 @@ var controller = {
 				publication
 			});
 
-		});
+		})
+		.populate('userID')
+		.populate('categoriaID')
+		.populate('rutaID');
 	},
 
 	getPublicationsUser: function(req, res)

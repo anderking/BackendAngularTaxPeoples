@@ -6,13 +6,13 @@ var Publication = require('../models/publication');
 
 var controller =
 {
-	upLikes: function(req, res)
+	upLike: function(req, res)
 	{
 		Like.find
 		(
 			{
 			    userID : { $in: [req.body.userID] },
-			    publicationID : { $in: [req.body.publicationID] }
+			    publicationID : { $in: [req.params.idP] }
 			},
 			(err, like) =>
 			{
@@ -22,9 +22,6 @@ var controller =
 				}
 				if(req.body.userID==undefined){
 					return res.status(404).send({ message: 'No se encuentra el campo userID en la solicitud' });	
-				}
-				if(req.body.publicationID==undefined){
-					return res.status(404).send({ message: 'No se encuentra el campo publicationID en la solicitud' });	
 				}
 				if(like.length>0)
 				{
@@ -36,7 +33,7 @@ var controller =
 					var params = req.body;
 
 					like.userID = params.userID;
-					like.publicationID = params.publicationID;
+					like.publicationID = req.params.idP;
 
 					like.save((err, likeStored) =>
 					{
@@ -54,17 +51,13 @@ var controller =
 		)
 	},
 
-	disLikes: function(req, res)
+	disLike: function(req, res)
 	{
-		var userID = req.body.userID;
-		var publicationID = req.body.publicationID;
-
 		Like.remove
 		(
 			{
 				userID : { $in: [req.body.userID] },
-			    publicationID : { $in: [req.body.publicationID] }
-
+			    publicationID : { $in: [req.params.idP] }
 			},(err, like) =>
 			{
 				if(err) return res.status(500).send({message: 'Error en el Servidor'});
@@ -80,18 +73,60 @@ var controller =
 		);
 	},
 
+	getLikesPublication: function(req, res)
+	{
+		Like.find
+		(
+			{
+			    publicationID : req.params.idP
+			},
+			(err, likesPublication) =>
+			{
+				if (err) return res.status(500).send({ message: err });
+
+				if(!likesPublication) return res.status(404).send({message: 'No hay likes de este proyecto.'});
+
+				return res.status(200).send({
+					likesPublication
+				})
+				
+			}
+		)
+	},
+
+	getLikesUsers: function(req, res)
+	{
+		Like.find
+		(
+			{
+			    userID : req.params.idU
+			},
+			(err, likesUsers) =>
+			{
+				if (err) return res.status(500).send({ message: err });
+
+				if(!likesUsers) return res.status(404).send({message: 'Este usuario no tiene likes.'});
+
+				return res.status(200).send({
+					likesUsers
+				})
+				
+			}
+		)
+	},
+
 	getLikes: function(req, res)
 	{
 		Like.find
 		(
 			{
-			    publicationID : req.params.id
+
 			},
 			(err, likes) =>
 			{
 				if (err) return res.status(500).send({ message: err });
 
-				if(!likes) return res.status(404).send({message: 'No hay likes de este proyecto.'});
+				if(!likes) return res.status(404).send({message: 'Este usuario no tiene likes.'});
 
 				return res.status(200).send({
 					likes

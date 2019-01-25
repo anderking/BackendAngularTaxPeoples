@@ -68,10 +68,10 @@ var controller = {
 												rif: params.rif,
 												telefono: params.telefono,
 												direccion: params.direccion,
-												estado: params.estado,
+												estado: params.estado.charAt(0).toUpperCase()+params.estado.slice(1),
 												userID: params.userID,
 											});
-											console.log(empresa);
+											
 
 											empresa.save((err, empresaStored) =>
 											{
