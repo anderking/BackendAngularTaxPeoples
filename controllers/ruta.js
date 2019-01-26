@@ -9,7 +9,7 @@ var controller = {
 		Ruta.find
 		(
 			{
-				name: req.body.name
+				name: req.body.name.charAt(0).toUpperCase()+req.body.name.slice(1)
 			},
 			(err, ruta) =>
 			{
@@ -29,7 +29,7 @@ var controller = {
 					var params = req.body;
 
 					ruta.name = params.name.charAt(0).toUpperCase()+params.name.slice(1),
-					ruta.description = params.description;
+					ruta.description = params.description.charAt(0).toUpperCase()+params.description.slice(1);
 
 					ruta.save((err, rutaStored) => {
 						if(err) return res.status(500).send({message: 'Error en el Servidor.'});
@@ -86,6 +86,7 @@ var controller = {
 		var rutaId = req.params.id;
 		var update = req.body;
 		update.name = update.name.charAt(0).toUpperCase()+update.name.slice(1);
+		update.description = update.description.charAt(0).toUpperCase()+update.description.slice(1);
 
 		Ruta.findByIdAndUpdate(rutaId, update, {new:true}, (err, rutaUpdated) => {
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});

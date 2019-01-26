@@ -68,8 +68,8 @@ var controller = {
 												telefono: params.telefono,
 												direccion: params.direccion,
 												estado: params.estado.charAt(0).toUpperCase()+params.estado.slice(1),
-												sexo: params.sexo,
-												edoCivil: params.edoCivil,
+												sexo: params.sexo.charAt(0).toUpperCase(),
+												edoCivil: params.edoCivil.charAt(0).toUpperCase(),
 												fechaNacimiento: params.fechaNacimiento,
 												userID: params.userID,
 											});
