@@ -1,6 +1,9 @@
 'use strict'
 
 var Ruta = require('../models/ruta');
+var Publication = require('../models/publication');
+var Like = require('../models/like');
+
 
 var controller = {
 	
@@ -79,6 +82,29 @@ var controller = {
 
 		});
 
+	},
+
+	getpublicationsRuta: function(req, res)
+	{	
+		var rutaID = req.params.id;
+		
+		if(rutaID == null) return res.status(404).send({message: 'No se encuentra el parametro rutaID.'});
+
+		Publication.find({rutaID: rutaID}, (err, publicationsRuta) => {
+
+			if(err) return res.status(500).send({message: 'Error en el servidor.'});
+
+			if(!publicationsRuta) return res.status(404).send({message: 'El id de la Publicación no existe.'});
+
+			return res.status(200).send({
+				publicationsRuta
+			});
+
+		})
+		.populate('userID')
+		.populate('categoriaID')
+		.populate('rutaID')
+		.sort('-_id');
 
 	},
 
@@ -103,26 +129,47 @@ var controller = {
 
 	deleteRuta: function(req, res){
 		var rutaId = req.params.id;
-		Ruta.findByIdAndRemove(rutaId, (err, rutaRemoved) => {
+		Ruta.findById(rutaId, (err, ruta) =>
+		{
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});
 
-			if(!rutaRemoved) return res.status(404).send({message: 'El id de la Ruta no existe.'});
+			if(!ruta) return res.status(404).send({message: 'El id de la Ruta no existe.'});
+
+			Publication.find({rutaID:rutaId}, (err, publications) =>{
+				if(publications.length>0)
+				{
+					for(var j=0; j<publications.length;j++)
+					{
+						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+					}
+					Publication.remove({rutaID:rutaId},(err,publicationsRemoved)=>{
+						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+					});
+				}
+			});
 			
 
-			return res.status(200).send({
-				ruta: rutaRemoved,
-				message: "Ruta Eliminada Correctamente"
+			ruta.remove((err,rutaRemoved)=>
+			{
+				return res.status(200).send({
+					ruta: rutaRemoved,
+					message: "Usuario Eliminado Correctamente"
+				});
 			});
 		});
 	},
 
 	deleteRutas: function(req, res){
 			
-		Ruta.remove({userID:userId}, (err, rutasRemoved) =>
+		Ruta.remove((err, rutasRemoved) =>
 		{
 			if(err) return res.status(500).send({
 				rutas: rutasRemoved,
-				message: 'No se ha podido borrar los usuarios'
+				message: 'No se ha podido borrar las rutas'
+			});
+			if(rutasRemoved) return res.status(200).send({
+				categorias: rutasRemoved,
+				message: 'Se han boorado todas las categorias'
 			});
 		});
 

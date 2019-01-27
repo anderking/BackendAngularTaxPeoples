@@ -1,6 +1,8 @@
 'use strict'
 
 var Categoria = require('../models/categoria');
+var Publication = require('../models/publication');
+var Like = require('../models/like');
 
 var controller = {
 	
@@ -81,6 +83,31 @@ var controller = {
 
 	},
 
+
+	getpublicationsCategoria: function(req, res)
+	{	
+		var categoriaID = req.params.id;
+		
+		if(categoriaID == null) return res.status(404).send({message: 'No se encuentra el parametro categoriaID.'});
+
+		Publication.find({categoriaID: categoriaID}, (err, publicationsCategoria) => {
+
+			if(err) return res.status(500).send({message: 'Error en el servidor.'});
+
+			if(!publicationsCategoria) return res.status(404).send({message: 'El id de la Publicación no existe.'});
+
+			return res.status(200).send({
+				publicationsCategoria
+			});
+
+		})
+		.populate('userID')
+		.populate('categoriaID')
+		.populate('rutaID')
+		.sort('-_id');
+
+	},
+
 	updateCategoria: function(req, res)
 	{
 		var categoriaId = req.params.id;
@@ -105,15 +132,32 @@ var controller = {
 	deleteCategoria: function(req, res)
 	{
 		var categoriaId = req.params.id;
-		Categoria.findByIdAndRemove(categoriaId, (err, categoriaRemoved) => {
+		Categoria.findById(categoriaId, (err, categoria) =>
+		{
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});
 
-			if(!categoriaRemoved) return res.status(404).send({message: 'El id de la Categoria no existe.'});
+			if(!categoria) return res.status(404).send({message: 'El id de la Categoria no existe.'});
+
+			Publication.find({categoriaID:categoriaId}, (err, publications) =>{
+				if(publications.length>0)
+				{
+					for(var j=0; j<publications.length;j++)
+					{
+						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+					}
+					Publication.remove({categoriaID:categoriaId},(err,publicationsRemoved)=>{
+						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+					});
+				}
+			});
 			
 
-			return res.status(200).send({
-				categoria: categoriaRemoved,
-				message: "Categoria Eliminada Correctamente"
+			categoria.remove((err,categoriaRemoved)=>
+			{
+				return res.status(200).send({
+					categoria: categoriaRemoved,
+					message: "Usuario Eliminado Correctamente"
+				});
 			});
 		});
 	},
@@ -121,11 +165,14 @@ var controller = {
 
 	deleteCategorias: function(req, res){
 			
-		Categoria.remove({userID:userId}, (err, categoriasRemoved) =>
+		Categoria.remove((err, categoriasRemoved) =>
 		{
 			if(err) return res.status(500).send({
-				categoria: categoriasRemoved,
-				message: 'No se ha podido borrar los usuarios'
+				message: 'No se ha podido borrar las categorias'
+			});
+			if(categoriasRemoved) return res.status(200).send({
+				categorias: categoriasRemoved,
+				message: 'Se han boorado todas las categorias'
 			});
 		});
 

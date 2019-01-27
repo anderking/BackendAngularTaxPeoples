@@ -180,11 +180,9 @@ var controller = {
 				for(var i=0; i<users.length;i++)
 				{
 					Persona.remove({userID:users[i]._id},(err,personaRemoved)=>{
-						console.log(personaRemoved);
 					});
 					
 					Empresa.remove({userID:users[i]._id},(err,empresaRemoved)=>{
-						console.log(empresaRemoved);
 					});
 
 					Publication.find({userID:users[i]._id}, (err, publications) =>{
