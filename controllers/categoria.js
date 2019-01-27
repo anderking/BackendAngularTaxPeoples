@@ -118,6 +118,18 @@ var controller = {
 		});
 	},
 
+
+	deleteCategorias: function(req, res){
+			
+		Categoria.remove({userID:userId}, (err, categoriasRemoved) =>
+		{
+			if(err) return res.status(500).send({
+				categoria: categoriasRemoved,
+				message: 'No se ha podido borrar los usuarios'
+			});
+		});
+
+	},
 };
 
 module.exports = controller;

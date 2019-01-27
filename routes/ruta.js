@@ -10,5 +10,6 @@ router.get('/ruta/:id?', auth, RutaController.getRuta);
 router.get('/rutas', auth, RutaController.getRutas);
 router.put('/ruta/:id', auth, RutaController.updateRuta);
 router.delete('/ruta/:id', auth, RutaController.deleteRuta);
+router.delete('/deleteRutas/', auth, RutaController.deleteRutas);
 
 module.exports = router;

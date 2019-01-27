@@ -116,6 +116,17 @@ var controller = {
 		});
 	},
 
+	deleteRutas: function(req, res){
+			
+		Ruta.remove({userID:userId}, (err, rutasRemoved) =>
+		{
+			if(err) return res.status(500).send({
+				rutas: rutasRemoved,
+				message: 'No se ha podido borrar los usuarios'
+			});
+		});
+
+	},
 };
 
 module.exports = controller;

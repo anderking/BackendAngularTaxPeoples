@@ -4,6 +4,7 @@ var User = require('../models/user');
 var Publication = require('../models/publication');
 var Persona = require('../models/persona');
 var Empresa = require('../models/empresa');
+var Like = require('../models/like');
 
 var fs = require('fs');
 var path = require('path');
@@ -135,19 +136,27 @@ var controller = {
 
 			if(!user) return res.status(404).send({message: "Id del usuario no existe."});
 			
-			Publication.remove({userID:userId}, (err, publications) =>
-			{
-				if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+			Publication.find({userID:userId}, (err, publications) =>{
+				if(publications.length>0)
+				{
+					for(var j=0; j<publications.length;j++)
+					{
+						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+					}
+					Publication.remove({userID:userId},(err,publicationsRemoved)=>{
+						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+					});
+				}
 			});
 
-			Persona.remove({userID:userId}, (err, publications) =>
+			Persona.remove({userID:userId}, (err, personaRemoved) =>
 			{
-				if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+				if(err) return res.status(500).send({message: 'No se ha podido borrar la persona asociada al usuario'});
 			});
 
-			Empresa.remove({userID:userId}, (err, publications) =>
+			Empresa.remove({userID:userId}, (err, empresaRemoved) =>
 			{
-				if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+				if(err) return res.status(500).send({message: 'No se ha podido borrar la empresa asociada al usuario'});
 			});
 			
 			user.remove((err,userRemoved)=>
@@ -158,6 +167,47 @@ var controller = {
 				});
 			});
 		});
+	},
+
+	deleteUsers: function(req, res)
+	{	
+		var userId = req.params.id;
+
+		User.find({ "_id": { $ne: userId } }, (err, users) =>
+		{
+			if(users.length>0)
+			{
+				for(var i=0; i<users.length;i++)
+				{
+					Persona.remove({userID:users[i]._id},(err,personaRemoved)=>{
+						console.log(personaRemoved);
+					});
+					
+					Empresa.remove({userID:users[i]._id},(err,empresaRemoved)=>{
+						console.log(empresaRemoved);
+					});
+
+					Publication.find({userID:users[i]._id}, (err, publications) =>{
+						if(publications.length>0)
+						{
+							for(var j=0; j<publications.length;j++)
+							{
+								Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+							}
+							Publication.remove({userID:users[i-1]._id},(err,publicationsRemoved)=>{});
+						}
+					});
+				}
+				User.remove({ "_id": { $ne: userId } }, (err, usersRemoved) =>
+				{	
+					if(users) return res.status(200).send({
+						users: users,
+						message: 'Usuarios Eliminados Correctamente'
+					});
+				});
+			}
+		});
+
 	},
 
 	uploadImage: function(req, res){

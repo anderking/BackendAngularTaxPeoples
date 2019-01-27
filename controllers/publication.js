@@ -4,6 +4,7 @@ var Publication = require('../models/publication');
 const User = require('../models/user');
 const Categoria = require('../models/categoria');
 const Ruta = require('../models/ruta');
+const Like = require('../models/like');
 var fs = require('fs');
 var path = require('path');
 
@@ -187,6 +188,11 @@ var controller = {
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});
 
 			if(!publicationRemoved) return res.status(404).send({message: "No existe la Publicación."});
+
+			Like.remove({publicationID: publicationId}, (err, likes) =>
+			{
+				if(err) return res.status(500).send({message: 'No se ha podido borrar los likes del usuario'});
+			});
 
 			return res.status(200).send({
 				publication: publicationRemoved,
