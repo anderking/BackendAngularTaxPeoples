@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Categoria = require('../models/categoria');
 const Ruta = require('../models/ruta');
 const Like = require('../models/like');
+const Coment = require('../models/coment');
 var fs = require('fs');
 var path = require('path');
 
@@ -192,6 +193,11 @@ var controller = {
 			Like.remove({publicationID: publicationId}, (err, likes) =>
 			{
 				if(err) return res.status(500).send({message: 'No se ha podido borrar los likes del usuario'});
+			});
+
+			Coment.remove({publicationID: publicationId}, (err, likes) =>
+			{
+				if(err) return res.status(500).send({message: 'No se ha podido borrar los comentarios del usuario'});
 			});
 
 			return res.status(200).send({

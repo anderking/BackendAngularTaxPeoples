@@ -84,7 +84,7 @@ var controller =
 			{
 				if (err) return res.status(500).send({ message: err });
 
-				if(!likesPublication) return res.status(404).send({message: 'No hay likes de este proyecto.'});
+				if(!likesPublication) return res.status(404).send({message: 'No hay likes de esta publicación.'});
 
 				return res.status(200).send({
 					likesPublication
@@ -92,9 +92,11 @@ var controller =
 				
 			}
 		)
+		.populate('userID')
+		.populate('publicationID');
 	},
 
-	getLikesUsers: function(req, res)
+	getLikesUser: function(req, res)
 	{
 		Like.find
 		(
@@ -113,6 +115,8 @@ var controller =
 				
 			}
 		)
+		.populate('userID')
+		.populate('publicationID');
 	},
 
 	getLikes: function(req, res)
@@ -134,6 +138,8 @@ var controller =
 				
 			}
 		)
+		.populate('userID')
+		.populate('publicationID');
 	},
 
 	isLike: function(req, res)

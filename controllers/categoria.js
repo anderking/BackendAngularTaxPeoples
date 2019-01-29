@@ -112,6 +112,7 @@ var controller = {
 	{
 		var categoriaId = req.params.id;
 		var update = req.body;
+		
 		update.name = update.name.charAt(0).toUpperCase()+update.name.slice(1);
 		update.description = update.description.charAt(0).toUpperCase()+update.description.slice(1);
 

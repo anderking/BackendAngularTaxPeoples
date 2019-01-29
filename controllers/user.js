@@ -5,6 +5,7 @@ var Publication = require('../models/publication');
 var Persona = require('../models/persona');
 var Empresa = require('../models/empresa');
 var Like = require('../models/like');
+var Coment = require('../models/coment');
 
 var fs = require('fs');
 var path = require('path');
@@ -141,12 +142,29 @@ var controller = {
 				{
 					for(var j=0; j<publications.length;j++)
 					{
-						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+						console.log("Si tenia publicaciones");
+						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{
+							console.log("Si tenia likes dentro de las publicaciones");
+						});
+						Coment.remove({publicationID : publications[j]._id},(err, comentRemoved) =>{
+							console.log("Si tenia comentarios dentro de las publicaciones");
+						});
 					}
-					Publication.remove({userID:userId},(err,publicationsRemoved)=>{
-						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
-					});
+					if(user.tipo!="admin")
+					{
+						Publication.remove({userID:userId},(err,publicationsRemoved)=>
+						{
+							if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
+						});
+					}
 				}
+			});
+			
+			Coment.remove({userID : userId},(err, comentRemoved) =>{
+				console.log("Si tenia comentario fuera de las publicaciones");
+			});
+			Like.remove({userID : userId},(err, comentRemoved) =>{
+				console.log("Si tenia likes fuera de las publicaciones");
 			});
 
 			Persona.remove({userID:userId}, (err, personaRemoved) =>
@@ -179,10 +197,12 @@ var controller = {
 			{
 				for(var i=0; i<users.length;i++)
 				{
-					Persona.remove({userID:users[i]._id},(err,personaRemoved)=>{
+					Persona.find({userID:users[i]._id},(err,personaRemoved)=>{
+						console.log("Si tenia persona  "+i);
 					});
 					
-					Empresa.remove({userID:users[i]._id},(err,empresaRemoved)=>{
+					Empresa.find({userID:users[i]._id},(err,empresaRemoved)=>{
+						console.log("Si tenia empresa "+i);
 					});
 
 					Publication.find({userID:users[i]._id}, (err, publications) =>{
@@ -190,13 +210,31 @@ var controller = {
 						{
 							for(var j=0; j<publications.length;j++)
 							{
-								Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{
+									console.log("Si tenia likes dentro de las publicaciones "+j);
+								});
+								Coment.find({userID : users[j]._id},(err, comentRemoved) =>{
+									console.log("Si tenia coments dentro de las publicaciones "+j);
+								});
 							}
-							Publication.remove({userID:users[i-1]._id},(err,publicationsRemoved)=>{});
+							
+							if(users[i-1].tipo!="admin")
+							{
+								Publication.find({userID:users[i-1]._id},(err,publicationsRemoved)=>{
+									console.log("removio todas las publicaciones");
+								});
+							}
 						}
 					});
+
+					Coment.find({userID : users[i]._id},(err, comentRemoved) =>{
+						console.log("Si tenia comentario fuera de las publicaciones "+i);
+					});
+					Like.find({userID : users[i]._id},(err, comentRemoved) =>{
+						console.log("Si tenia likes fuera de las publicaciones "+i);
+					});
 				}
-				User.remove({ "_id": { $ne: userId } }, (err, usersRemoved) =>
+				User.find({ "_id": { $ne: userId } }, (err, usersRemoved) =>
 				{	
 					if(users) return res.status(200).send({
 						users: users,
