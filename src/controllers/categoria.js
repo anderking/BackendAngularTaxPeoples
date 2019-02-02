@@ -3,6 +3,7 @@
 var Categoria = require('../models/categoria');
 var Publication = require('../models/publication');
 var Like = require('../models/like');
+var Coment = require('../models/coment');
 
 var controller = {
 	
@@ -57,7 +58,6 @@ var controller = {
 			if(err) return res.status(500).send({message: 'Error en el Servidor.'});
 
 			if(!categoria) return res.status(404).send({message: 'El id de la Categoria no existe.'});
-
 			return res.status(200).send({
 				categoria
 			});
@@ -145,6 +145,7 @@ var controller = {
 					for(var j=0; j<publications.length;j++)
 					{
 						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+						Coment.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
 					}
 					Publication.remove({categoriaID:categoriaId},(err,publicationsRemoved)=>{
 						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
@@ -157,7 +158,7 @@ var controller = {
 			{
 				return res.status(200).send({
 					categoria: categoriaRemoved,
-					message: "Usuario Eliminado Correctamente"
+					message: "Categoría Eliminada Correctamente"
 				});
 			});
 		});
@@ -166,18 +167,42 @@ var controller = {
 
 	deleteCategorias: function(req, res){
 			
-		Categoria.remove((err, categoriasRemoved) =>
+		Categoria.find((err, categorias) =>
 		{
-			if(err) return res.status(500).send({
-				message: 'No se ha podido borrar las categorias'
-			});
-			if(categoriasRemoved) return res.status(200).send({
-				categorias: categoriasRemoved,
-				message: 'Se han boorado todas las categorias'
+			if(categorias.length>0)
+			{
+				for(var i=0; i<categorias.length;i++)
+				{
+					Publication.find({categoriaID:categorias[i]._id}, (err, publications) =>
+					{
+						if(publications.length>0)
+						{
+							for(var j=0; j<publications.length;j++)
+							{
+								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{
+								});
+								Coment.find({publicationID : publications[j]._id},(err, comentRemoved) =>{
+								});
+							}
+							
+							Publication.find({categoriaID:categorias[i-1]._id},(err,publicationsRemoved)=>{
+								console.log(publicationsRemoved);
+							});
+						}
+					});
+				}
+			}
+
+			Categoria.find((err, categoriasRemoved) =>
+			{
+				if(categoriasRemoved) return res.status(200).send({
+					categorias: categoriasRemoved,
+					message: "Categorías Eliminadas Correctamente"
+				});
 			});
 		});
-
 	},
+
 };
 
 module.exports = controller;

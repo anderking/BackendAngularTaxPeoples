@@ -249,16 +249,18 @@ var controller = {
 	uploadImage: function(req, res){
 		var userId = req.params.id;
 		var fileName = 'Imagen no subida...';
+		console.log("entro")
 
-		if(req.files){
+		if(req.files)
+		{
 			var filePath = req.files.image.path;
 			var fileSplit = filePath.split('\\');
 			var fileName = fileSplit[1];
 			var extSplit = fileName.split('\.');
 			var fileExt = extSplit[1];
 
-			if(fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == 'gif'){
-
+			if(fileExt == 'png' || fileExt == 'jpg' || fileExt == 'jpeg' || fileExt == 'gif')
+			{
 				User.findByIdAndUpdate(userId, {image: fileName}, {new: true}, (err, userUpdated) =>
 				{
 					if(err) return res.status(500).send({message: 'La imagen no se ha subido'});
@@ -270,13 +272,15 @@ var controller = {
 					});
 				});
 
-			}else{
+			}else
+			{
 				fs.unlink(filePath, (err) => {
 					return res.status(200).send({message: 'La extensión no es válida'});
 				});
 			}
 
-		}else{
+		}else
+		{
 			return res.status(200).send({
 				message: fileName
 			});

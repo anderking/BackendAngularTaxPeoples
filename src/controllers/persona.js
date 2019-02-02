@@ -109,7 +109,8 @@ var controller = {
 			if(err) return res.status(500).send({message: 'Error en el Servidor.'});
 
 			if(!persona) return res.status(404).send({message: 'El id de la persona asociada al Usuario no existe.'});
-
+			
+			persona = persona[0];
 			return res.status(200).send({
 				persona
 			});

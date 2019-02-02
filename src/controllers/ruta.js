@@ -3,6 +3,7 @@
 var Ruta = require('../models/ruta');
 var Publication = require('../models/publication');
 var Like = require('../models/like');
+var Coment = require('../models/coment');
 
 
 var controller = {
@@ -141,6 +142,7 @@ var controller = {
 					for(var j=0; j<publications.length;j++)
 					{
 						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+						Coment.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{});
 					}
 					Publication.remove({rutaID:rutaId},(err,publicationsRemoved)=>{
 						if(err) return res.status(500).send({message: 'No se ha podido borrar las publicaciones del usuario'});
@@ -153,7 +155,7 @@ var controller = {
 			{
 				return res.status(200).send({
 					ruta: rutaRemoved,
-					message: "Usuario Eliminado Correctamente"
+					message: "Ruta Eliminada Correctamente"
 				});
 			});
 		});
@@ -161,15 +163,37 @@ var controller = {
 
 	deleteRutas: function(req, res){
 			
-		Ruta.remove((err, rutasRemoved) =>
+		Ruta.find((err, rutas) =>
 		{
-			if(err) return res.status(500).send({
-				rutas: rutasRemoved,
-				message: 'No se ha podido borrar las rutas'
-			});
-			if(rutasRemoved) return res.status(200).send({
-				categorias: rutasRemoved,
-				message: 'Se han boorado todas las categorias'
+			if(rutas.length>0)
+			{
+				for(var i=0; i<rutas.length;i++)
+				{
+					Publication.find({rutaID:rutas[i]._id}, (err, publications) =>
+					{
+						if(publications.length>0)
+						{
+							for(var j=0; j<publications.length;j++)
+							{
+								Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{
+								});
+								Coment.remove({publicationID : publications[j]._id},(err, comentRemoved) =>{
+								});
+							}
+							
+							Publication.remove({rutaID:rutas[i-1]._id},(err,publicationsRemoved)=>{
+							});
+						}
+					});
+				}
+			}
+
+			Ruta.remove((err, rutasRemoved) =>
+			{
+				if(rutasRemoved) return res.status(200).send({
+					rutas: rutasRemoved,
+					message: "Rutas Eliminadas Correctamente"
+				});
 			});
 		});
 

@@ -5,8 +5,8 @@ const app = require('./app');
 const config = require('./config/config');
 
 mongoose.Promise = global.Promise;
-app.set('port', process.env.PORT || config.port);
-const port = app.get('port')
+//app.set('port', process.env.PORT || config.port);
+//const port = app.get('port')
 
 mongoose.connect
 (
@@ -28,9 +28,9 @@ mongoose.connect
 		
 		app.listen
 		(
-			port, () =>
+			config.port, () =>
 			{
-				console.log(`API REST corriendo en http://localhost:${port}`);
+				console.log(`API REST corriendo en http://localhost:${config.port}`);
 			}
 		);
 	}
