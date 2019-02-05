@@ -34,6 +34,7 @@ var ruta_routes = require('./routes/ruta');
 var publication_routes = require('./routes/publication');
 var like_routes = require('./routes/like');
 var coment_routes = require('./routes/coment');
+var calificacion_routes = require('./routes/calificacion');
 
 // rutas
 app.use('/api', auth_routes);
@@ -45,6 +46,7 @@ app.use('/api', ruta_routes);
 app.use('/api', publication_routes);
 app.use('/api', like_routes);
 app.use('/api', coment_routes);
+app.use('/api', calificacion_routes);
 
 
 // exportar
