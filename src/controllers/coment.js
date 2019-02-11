@@ -132,7 +132,6 @@ var controller = {
 	updateComent: function(req, res){
 		var comentId = req.params.id;
 		var update = req.body;
-		console.log(update);
 
 		Coment.findByIdAndUpdate(comentId, { text: req.body.text }, {new:true}, (err, comentUpdated) => {
 			if(err) return res.status(500).send({message: 'Error en el Servidor'});

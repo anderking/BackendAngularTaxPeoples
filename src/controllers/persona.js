@@ -73,7 +73,6 @@ var controller = {
 												fechaNacimiento: params.fechaNacimiento,
 												userID: params.userID,
 											});
-											console.log(persona);
 
 											persona.save((err, personaStored) =>
 											{

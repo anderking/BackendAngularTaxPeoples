@@ -108,7 +108,6 @@ var controller = {
 			if(!empresa) return res.status(404).send({message: 'El id de la empresa asociada al Usuario no existe.'});
 
 			empresa = empresa[0];
-			console.log(empresa)
 			return res.status(200).send({
 				empresa
 			});

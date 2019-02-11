@@ -6,6 +6,7 @@ var Persona = require('../models/persona');
 var Empresa = require('../models/empresa');
 var Like = require('../models/like');
 var Coment = require('../models/coment');
+var Calificacion = require('../models/calificacion');
 
 var fs = require('fs');
 var path = require('path');
@@ -116,7 +117,7 @@ var controller = {
 		var update = req.body;
 
 		User.findByIdAndUpdate(userId, update, {new:true}, (err, userUpdated) => {
-			if(err) return res.status(500).send({message: 'Este correo ya existe, utilice otro por favor!'});
+			if(err) return res.status(500).send({message: 'Error en el Servidor'});
 			
 			if(!userUpdated) return res.status(404).send({message: 'Id del usuario no existe'});
 
@@ -142,12 +143,9 @@ var controller = {
 				{
 					for(var j=0; j<publications.length;j++)
 					{
-						console.log("Si tenia publicaciones");
 						Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{
-							console.log("Si tenia likes dentro de las publicaciones");
 						});
 						Coment.remove({publicationID : publications[j]._id},(err, comentRemoved) =>{
-							console.log("Si tenia comentarios dentro de las publicaciones");
 						});
 					}
 					if(user.tipo!="admin")
@@ -161,10 +159,10 @@ var controller = {
 			});
 			
 			Coment.remove({userID : userId},(err, comentRemoved) =>{
-				console.log("Si tenia comentario fuera de las publicaciones");
 			});
 			Like.remove({userID : userId},(err, comentRemoved) =>{
-				console.log("Si tenia likes fuera de las publicaciones");
+			});
+			Calificacion.remove({userEmisorID : userId},(err, calificationRemoved) =>{
 			});
 
 			Persona.remove({userID:userId}, (err, personaRemoved) =>
@@ -197,12 +195,10 @@ var controller = {
 			{
 				for(var i=0; i<users.length;i++)
 				{
-					Persona.find({userID:users[i]._id},(err,personaRemoved)=>{
-						console.log("Si tenia persona  "+i);
+					Persona.remove({userID:users[i]._id},(err,personaRemoved)=>{
 					});
 					
-					Empresa.find({userID:users[i]._id},(err,empresaRemoved)=>{
-						console.log("Si tenia empresa "+i);
+					Empresa.remove({userID:users[i]._id},(err,empresaRemoved)=>{
 					});
 
 					Publication.find({userID:users[i]._id}, (err, publications) =>{
@@ -210,31 +206,28 @@ var controller = {
 						{
 							for(var j=0; j<publications.length;j++)
 							{
-								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{
-									console.log("Si tenia likes dentro de las publicaciones "+j);
+								Like.remove({publicationID : publications[j]._id},(err, likeRemoved) =>{
 								});
-								Coment.find({userID : users[j]._id},(err, comentRemoved) =>{
-									console.log("Si tenia coments dentro de las publicaciones "+j);
+								Coment.remove({publicationID : publications[j]._id},(err, comentRemoved) =>{
 								});
 							}
 							
 							if(users[i-1].tipo!="admin")
 							{
-								Publication.find({userID:users[i-1]._id},(err,publicationsRemoved)=>{
-									console.log("removio todas las publicaciones");
+								Publication.remove({userID:users[i-1]._id},(err,publicationsRemoved)=>{
 								});
 							}
 						}
 					});
 
-					Coment.find({userID : users[i]._id},(err, comentRemoved) =>{
-						console.log("Si tenia comentario fuera de las publicaciones "+i);
+					Coment.remove({userID : users[i]._id},(err, comentRemoved) =>{
 					});
-					Like.find({userID : users[i]._id},(err, comentRemoved) =>{
-						console.log("Si tenia likes fuera de las publicaciones "+i);
+					Like.remove({userID : users[i]._id},(err, comentRemoved) =>{
+					});
+					Calificacion.remove({userEmisorID : users[i]._id},(err, comentRemoved) =>{
 					});
 				}
-				User.find({ "_id": { $ne: userId } }, (err, usersRemoved) =>
+				User.remove({ "_id": { $ne: userId } }, (err, usersRemoved) =>
 				{	
 					if(users) return res.status(200).send({
 						users: users,
@@ -249,7 +242,6 @@ var controller = {
 	uploadImage: function(req, res){
 		var userId = req.params.id;
 		var fileName = 'Imagen no subida...';
-		console.log("entro")
 
 		if(req.files)
 		{

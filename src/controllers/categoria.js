@@ -179,10 +179,8 @@ var controller = {
 						{
 							for(var j=0; j<publications.length;j++)
 							{
-								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{
-								});
-								Coment.find({publicationID : publications[j]._id},(err, comentRemoved) =>{
-								});
+								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{});
+								Coment.find({publicationID : publications[j]._id},(err, comentRemoved) =>{});
 							}
 							
 							Publication.find({categoriaID:categorias[i-1]._id},(err,publicationsRemoved)=>{

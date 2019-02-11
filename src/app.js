@@ -10,6 +10,8 @@ var path = require('path');
 var app = express();
 
 // settings
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
 // middlewares
 app.use(bodyParser.urlencoded({extended:false}));
@@ -25,6 +27,7 @@ app.use((req, res, next) => {
 });
 
 // cargar archivos rutas
+var home_routes = require('./routes/home');
 var auth_routes = require('./routes/auth');
 var user_routes = require('./routes/user');
 var persona_routes = require('./routes/persona');
@@ -37,6 +40,8 @@ var coment_routes = require('./routes/coment');
 var calificacion_routes = require('./routes/calificacion');
 
 // rutas
+app.use('/', home_routes);
+app.use('/api', home_routes);
 app.use('/api', auth_routes);
 app.use('/api', user_routes);
 app.use('/api', persona_routes);

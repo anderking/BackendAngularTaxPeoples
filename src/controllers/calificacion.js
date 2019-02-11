@@ -15,8 +15,6 @@ var controller =
 			},
 			(err, calificacion) =>
 			{
-				console.log(req.body.userEmisorID);
-				console.log(req.body.userReceptorID);
 				if (err)
 				{
 					return res.status(500).send({ message: "Error en el Servidor" });
@@ -129,7 +127,6 @@ var controller =
 	getCalificacionesR: function(req, res)
 	{	
 		var userReceptorID = req.params.idR;
-		console.log(userReceptorID)
 		
 		if(userReceptorID == null) return res.status(404).send({message: 'No se encuentra el parametro userReceptorID.'});
 

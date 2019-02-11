@@ -11,7 +11,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect
 (
 	config.db,
-	{//desabilita los mensajes de advertencia
+	{
 		useNewUrlParser:true,
 		useFindAndModify:true,
 		useCreateIndex:true
