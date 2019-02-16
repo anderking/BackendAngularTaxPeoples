@@ -173,20 +173,27 @@ var controller = {
 			{
 				for(var i=0; i<categorias.length;i++)
 				{
+					console.log(i);
+					console.log(categorias[i]._id);
 					Publication.find({categoriaID:categorias[i]._id}, (err, publications) =>
 					{
+						i = i-1;
+						console.log(i);
 						if(publications.length>0)
 						{
 							for(var j=0; j<publications.length;j++)
 							{
+								console.log("entro en la "+categorias[i]._id);
 								Like.find({publicationID : publications[j]._id},(err, likeRemoved) =>{});
 								Coment.find({publicationID : publications[j]._id},(err, comentRemoved) =>{});
 							}
 							
-							Publication.find({categoriaID:categorias[i-1]._id},(err,publicationsRemoved)=>{
-								console.log(publicationsRemoved);
+							
+							Publication.find({categoriaID:categorias[i]._id},(err,publicationsRemoved)=>{
+								//console.log(publicationsRemoved.length);
 							});
 						}
+						
 					});
 				}
 			}
